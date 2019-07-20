@@ -3,20 +3,41 @@
   "bugs": {
     "url": "https://github.com/deathbeds/jupyterlab-outsource/issues"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@deathbeds/jupyterlab-outsource": "^1.0.0",
-    "@deathbeds/jupyterlab-outsource-blockly": "^1.0.0",
-    "@deathbeds/jupyterlab-outsource-prosemirror": "^1.0.0"
+    "@jupyterlab/application": "^1.0.0",
+    "@jupyterlab/launcher": "^1.0.0"
   },
-  "description": "Alternate editors for JupyterLab Source",
+  "dependencies": {
+    "y-websockets-client": "^8.0.0-0",
+    "yjs": "^12.0.0-0",
+    "y-text": "*",
+    "y-array": "*",
+    "y-memory": "*",
+    "y-map": "*"
+  },
+  "devDependencies": {
+    "@deathbeds/jupyterlab-outsource": "^1.0.0",
+    "@jupyterlab/application": "^1.0.0",
+    "@jupyterlab/launcher": "^1.0.0"
+  },
+  "description": "YJS for outsource",
   "files": [
     "{lib,style}/**/*.{css,d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}"
   ],
   "homepage": "https://github.com/deathbeds/jupyterlab-outsource",
+  "jupyterlab": {
+    "extension": "lib/extension.js"
+  },
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension",
+    "yjs"
+  ],
   "license": "BSD-3-Clause",
   "main": "lib/index.js",
-  "private": true,
-  "name": "@deathbeds/jupyterlab-outsource-meta",
+  "name": "@deathbeds/jupyterlab-outsource-y",
   "repository": {
     "type": "git",
     "url": "https://github.com/deathbeds/jupyterlab-outsource.git"

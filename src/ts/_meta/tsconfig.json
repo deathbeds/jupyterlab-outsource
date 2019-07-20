@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfigbase",
+  "extends": "../../../tsconfigbase",
   "compilerOptions": {
     "outDir": "lib",
     "rootDir": "src"
@@ -16,6 +16,9 @@
     },
     {
       "path": "../prosemirror"
+    },
+    {
+      "path": "../y"
     }
   ]
 }

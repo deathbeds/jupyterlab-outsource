@@ -14,7 +14,11 @@ else
   fi
 fi
 
-set -ex
+set -eux
+pushd src/py/jupyter_y_websockets
+python -m pip install -e . --ignore-installed --no-deps
+popd
+
 jlpm --ignore-optional || jlpm || echo "well, let's try anyway"
 jlpm bootstrap
 jupyter labextension install $(cat labex.txt)

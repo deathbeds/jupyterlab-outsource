@@ -8,5 +8,5 @@ _testoutput/
 anaconda-project.yml
 envs/
 node_modules/
-src/*/lib
+src/**/lib
 Untitled*
