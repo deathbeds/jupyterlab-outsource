@@ -4,33 +4,35 @@
     "url": "https://github.com/deathbeds/jupyterlab-outsource/issues"
   },
   "peerDependencies": {
-    "@deathbeds/jupyterlab-outsource": "^1.0.0",
-    "@jupyterlab/application": "^1.0.0"
+    "@jupyterlab/application": "~2.0.0"
   },
   "dependencies": {
-    "prosemirror-commands": "^1.0.8",
-    "prosemirror-example-setup": "^1.0.1",
-    "prosemirror-keymap": "^1.0.1",
-    "prosemirror-model": "^1.7.1",
-    "prosemirror-schema-basic": "^1.0.1",
-    "prosemirror-schema-list": "^1.0.3",
-    "prosemirror-markdown": "^1.3.1",
-    "prosemirror-state": "^1.2.3",
-    "prosemirror-view": "^1.9.11"
+    "prosemirror-commands": "~1.1.3",
+    "prosemirror-example-setup": "~1.1.2",
+    "prosemirror-history": "~1.1.3",
+    "prosemirror-keymap": "~1.1.3",
+    "prosemirror-model": "~1.9.1",
+    "prosemirror-schema-basic": "~1.1.2",
+    "prosemirror-schema-list": "~1.1.2",
+    "prosemirror-markdown": "~1.4.4",
+    "prosemirror-state": "~1.3.2",
+    "prosemirror-view": "~1.14.2"
   },
   "devDependencies": {
-    "@deathbeds/jupyterlab-outsource": "^1.0.0",
+    "@types/codemirror": "0.0.87",
     "@types/prosemirror-commands": "^1.0.0",
-    "@types/prosemirror-keymap": "^1.0.0",
-    "@types/prosemirror-model": "^1.5.0",
-    "@types/prosemirror-schema-basic": "^1.0.0",
-    "@types/prosemirror-schema-list": "^1.0.0",
-    "@types/prosemirror-state": "^1.0.0",
-    "@types/prosemirror-view": "^1.0.0"
+    "@types/prosemirror-history": "^1.0.1",
+    "@types/prosemirror-keymap": "^1.0.1",
+    "@types/prosemirror-markdown": "^1.0.3",
+    "@types/prosemirror-model": "^1.7.2",
+    "@types/prosemirror-schema-basic": "^1.0.1",
+    "@types/prosemirror-schema-list": "^1.0.1",
+    "@types/prosemirror-state": "^1.2.3",
+    "@types/prosemirror-view": "^1.11.2"
   },
   "description": "ProseMirror Rich Text Editing for JupyterLab",
   "files": [
-    "{lib,style}/**/*.{css,d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}"
+    "{lib,style,src}/**/*.{css,d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf,ts,stx}"
   ],
   "homepage": "https://github.com/deathbeds/jupyterlab-outsource",
   "jupyterlab": {
@@ -50,9 +52,8 @@
     "url": "https://github.com/deathbeds/jupyterlab-outsource.git"
   },
   "scripts": {
-    "build": "tsc -b",
-    "watch": "tsc -b --watch"
+    "lab:link": "jupyter labextension link --debug --no-build ."
   },
   "types": "lib/index.d.ts",
-  "version": "1.0.0"
+  "version": "2.0.0"
 }

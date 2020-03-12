@@ -245,37 +245,47 @@
 }
 
 /* our stuff */
+.jp-Outsource-ProseMirror {
+  --jp-outsource-menubar-height: 2em;
+}
+
 .jp-RenderedHTMLCommon > .jp-Outsource-ProseMirror-wrapper:last-child {
   margin: 0;
 }
 
 .jp-Outsource-ProseMirror.jp-RenderedHTMLCommon {
-  display: flex;
-  flex-direction: column;
   padding: 0;
   margin: 0;
 }
 
 .jp-Outsource-ProseMirror-wrapper {
-  flex: 1;
-  flex-direction: column;
-  display: flex;
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
 }
 
 .jp-Outsource-ProseMirror .ProseMirror-menubar-wrapper {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.jp-Outsource-ProseMirror .ProseMirror-menubar {
+  height: var(--jp-outsource-menubar-height);
 }
 
 .jp-Outsource-ProseMirror .ProseMirror {
   padding: 0 var(--jp-notebook-padding);
   overflow-y: auto;
-  flex: 1;
-}
-
-.jp-Outsource-ProseMirror .ProseMirror-menubar {
-  flex-grow: 0;
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: var(--jp-outsource-menubar-height);
+  bottom: 0;
 }
 
 .jp-Outsource-ProseMirrorIcon {

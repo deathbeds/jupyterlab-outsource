@@ -1,51 +1,68 @@
-import {Token} from '@phosphor/coreutils';
-import {Widget} from '@phosphor/widgets';
-import {ISignal} from '@phosphor/signaling';
+import { Token, ReadonlyPartialJSONObject } from '@lumino/coreutils';
+import { Widget } from '@lumino/widgets';
+import { ISignal } from '@lumino/signaling';
 
-import {ICellModel} from '@jupyterlab/cells';
-import {INotebookTracker} from '@jupyterlab/notebook';
+import { ICellModel } from '@jupyterlab/cells';
+import { INotebookTracker } from '@jupyterlab/notebook';
+import { CodeEditor } from '@jupyterlab/codeeditor';
+import { IEditorTracker } from '@jupyterlab/fileeditor';
 
 export const PLUGIN_ID = '@deathbeds/jupyterlab-outsource';
 
-/* tslint:disable */
-/**
- * The notebook source manager
- */
-export const IOutsourcerer = new Token<IOutsourcerer>(PLUGIN_ID);
-/* tslint:enable */
+export const IOutsourceror = new Token<IOutsourceror>(PLUGIN_ID);
 
-export interface IOutsourcerer {
+export interface IOutsourceror {
   ready: Promise<void>;
-  register(factory: IOutsourceFactory): IOutsourceFactory;
-  factoryRegistered: ISignal<IOutsourcerer, IOutsourceFactory>;
-  widgetRequested: ISignal<IOutsourcerer, string>;
+  register(factory: IOutsourceror.IFactory): IOutsourceror.IFactory;
+  factoryRegistered: ISignal<IOutsourceror, IOutsourceror.IFactory>;
+  widgetRequested: ISignal<IOutsourceror, IOutsourceror.IWidgetOptions>;
   isMarkdownCell: boolean;
   isCodeCell: boolean;
-  executeRequested: ISignal<IOutsourcerer, ICellModel>;
-  execute(cell: ICellModel): void;
-  factories: IOutsourceFactory[];
-  factory(id: string): IOutsourceFactory;
-  requestWidget(factoryName: string): void;
+  executeCellRequested: ISignal<IOutsourceror, ICellModel>;
+  executeTextRequested: ISignal<IOutsourceror, IOutsourceror.IConsoleExecuteOptions>;
+  executeCell(cell: ICellModel): void;
+  executeText(options: IOutsourceror.IConsoleExecuteOptions): void;
+  factories: IOutsourceror.IFactory[];
+  factory(id: string): IOutsourceror.IFactory | null;
+  requestWidget(options: IOutsourceror.IWidgetOptions): void;
 }
 
-export interface IOutsourcererOptions {
-  notebooks?: INotebookTracker;
-}
+export namespace IOutsourceror {
+  export interface IOptions {
+    notebooks?: INotebookTracker;
+    editors?: IEditorTracker;
+  }
 
-export interface IOutsourceFactory {
-  readonly name: string;
-  readonly iconClass: string;
-  readonly id: string;
-  createWidget(options: IOutsourceFactoryOptions): Promise<Widget>;
-  isEnabled?(sourceror?: IOutsourcerer): boolean;
-}
+  export interface IConsoleExecuteOptions {
+    text: string;
+    widgetId: string;
+  }
 
-export interface IOutsourceFactoryOptions {
-  // FIXME: probably some other upstream model
-  model: ICellModel;
-  sourceror?: IOutsourcerer;
+  export interface IFactory {
+    readonly name: string;
+    readonly iconClass: string;
+    readonly id: string;
+    createWidget(options: IFactoryOptions): Promise<Widget>;
+    isEnabled?(sourceror?: IOutsourceror): boolean;
+  }
+
+  export interface IFactoryOptions {
+    model: CodeEditor.IModel;
+    sourceror: IOutsourceror;
+    widget: Widget;
+  }
+
+  export interface IWidgetOptions extends ReadonlyPartialJSONObject {
+    factory: string;
+    widgetId: string;
+  }
 }
 
 export const CSS = {
-  icon: 'jp-OutsourceIcon',
+  icon: 'jp-OutsourceIcon'
 };
+
+export namespace CommandIds {
+  export const newSource = 'outsource:new-outsource';
+  export const treeOpen = 'outsource:tree-open';
+}

@@ -1,11 +1,9 @@
 __pycache__
 _testoutput/
 .ipynb_checkpoints/
-.projectignore
 *.egg-info/
 *.log
 *.tsbuildinfo
-anaconda-project.yml
 envs/
 node_modules/
 src/*/lib

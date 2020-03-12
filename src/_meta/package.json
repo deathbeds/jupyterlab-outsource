@@ -4,9 +4,9 @@
     "url": "https://github.com/deathbeds/jupyterlab-outsource/issues"
   },
   "dependencies": {
-    "@deathbeds/jupyterlab-outsource": "^1.0.0",
-    "@deathbeds/jupyterlab-outsource-blockly": "^1.0.0",
-    "@deathbeds/jupyterlab-outsource-prosemirror": "^1.0.0"
+    "@deathbeds/jupyterlab-outsource": "file:../_core",
+    "@deathbeds/jupyterlab-outsource-blockly": "file:../blockly",
+    "@deathbeds/jupyterlab-outsource-prosemirror": "file:../prosemirror"
   },
   "description": "Alternate editors for JupyterLab Source",
   "files": [
@@ -26,5 +26,5 @@
     "watch": "tsc -b --watch"
   },
   "types": "lib/index.d.ts",
-  "version": "1.0.0"
+  "version": "2.0.0"
 }

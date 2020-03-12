@@ -5,12 +5,13 @@
   },
   "description": "Alternate editors for JupyterLab Source",
   "devDependencies": {
-    "@jupyterlab/application": "^1.0.0",
-    "@jupyterlab/apputils": "^1.0.0",
-    "@jupyterlab/notebook": "^1.0.0"
+    "@jupyterlab/application": "~2.0.0",
+    "@jupyterlab/apputils": "~2.0.0",
+    "@jupyterlab/fileeditor": "~2.0.0",
+    "@jupyterlab/notebook": "~2.0.0"
   },
   "files": [
-    "{lib,style}/**/*.{css,d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}"
+    "{lib,style,src}/**/*.{css,d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf,ts,tsx}"
   ],
   "homepage": "https://github.com/deathbeds/jupyterlab-outsource",
   "jupyterlab": {
@@ -25,18 +26,18 @@
   "main": "lib/index.js",
   "name": "@deathbeds/jupyterlab-outsource",
   "peerDependencies": {
-    "@jupyterlab/application": "^1.0.0",
-    "@jupyterlab/apputils": "^1.0.0",
-    "@jupyterlab/notebook": "^1.0.0"
+    "@jupyterlab/application": "~2.0.0",
+    "@jupyterlab/apputils": "~2.0.0",
+    "@jupyterlab/fileeditor": "~2.0.0",
+    "@jupyterlab/notebook": "~2.0.0"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/deathbeds/jupyterlab-outsource.git"
   },
   "scripts": {
-    "build": "tsc -b",
-    "watch": "tsc -b --watch"
+    "lab:link": "jupyter labextension link --debug --no-build ."
   },
   "types": "lib/index.d.ts",
-  "version": "1.0.0"
+  "version": "2.0.0"
 }

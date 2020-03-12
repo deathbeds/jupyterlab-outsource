@@ -1,23 +1,16 @@
-import {Token} from '@phosphor/coreutils';
+import { Token } from '@lumino/coreutils';
+import Blockly from 'blockly';
+import { IOutsourceror } from '@deathbeds/jupyterlab-outsource/src';
 
 export const PLUGIN_ID = '@deathbeds/jupyterlab-outsource:blockly';
 
-import '../style/index.css';
-
-/* tslint:disable */
-/**
- * The notebook source manager
- */
 export const IOutsourceBlockly = new Token<IOutsourceBlockly>(PLUGIN_ID);
-/* tslint:enable */
-
-export interface IOutsourceBlockly {}
 
 const NS = 'jp-Outsource-Blockly';
 
 export const CSS = {
   OUTER_WRAPPER: NS,
-  WRAPPER: `${NS}-wrapper`,
+  WRAPPER: `${NS}-wrapper`
 };
 
 export interface IBlocklyMetadata {
@@ -25,10 +18,30 @@ export interface IBlocklyMetadata {
   toolbox?: string;
 }
 
-export const START_BLOCKLY = {
-  python: '# start blockly',
-};
+export interface IOutsourceBlockly extends IOutsourceror.IFactory {
+  addGenerator(generator: IOutsourceBlockly.IGenerator): void;
+  generatorForMimeType(mimeType: string): IOutsourceBlockly.IGenerator | null;
+}
 
-export const END_BLOCKLY = {
-  python: '# end blockly',
-};
+export namespace IOutsourceBlockly {
+  export interface IGenerator {
+    name: string;
+    mimeTypes: string[];
+    start: RegExp;
+    end: RegExp;
+    workspace: RegExp;
+    toSource(options: ISourceOptions): Promise<string>;
+  }
+
+  export interface ISourceOptions {
+    blockly: typeof Blockly;
+    workspace: Blockly.Workspace;
+    xml?: string | null;
+    header: string;
+    footer: string;
+  }
+
+  export interface IFactoryOptions extends IOutsourceror.IFactoryOptions {
+    factory: IOutsourceBlockly;
+  }
+}

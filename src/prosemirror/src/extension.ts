@@ -1,26 +1,41 @@
-import {JupyterFrontEnd, JupyterFrontEndPlugin} from '@jupyterlab/application';
+import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
 
-import {IOutsourcerer} from '@deathbeds/jupyterlab-outsource';
+import { IOutsourceror } from '@deathbeds/jupyterlab-outsource';
 
-import {IOutsourceProsemirror, PLUGIN_ID} from '.';
+import { IOutsourceProsemirror, PLUGIN_ID } from '.';
 
-import {ProsemirrorFactory} from './factory';
-
-import '../style/index.css';
-import 'prosemirror-example-setup/style/style.css';
-import 'prosemirror-view/style/prosemirror.css';
+import { ProsemirrorFactory } from './factory';
 
 const extension: JupyterFrontEndPlugin<IOutsourceProsemirror> = {
   id: PLUGIN_ID,
   autoStart: true,
   provides: IOutsourceProsemirror,
-  requires: [IOutsourcerer],
+  requires: [IOutsourceror],
   activate: (
     _app: JupyterFrontEnd,
-    sourcerer: IOutsourcerer
+    sourceror: IOutsourceror
   ): IOutsourceProsemirror => {
-    return sourcerer.register(new ProsemirrorFactory());
+    const prosemirror = new ProsemirrorFactory(sourceror);
+    sourceror.register(prosemirror);
+    return prosemirror;
   },
 };
 
-export default extension;
+const codeBlock: JupyterFrontEndPlugin<void> = {
+  id: `${PLUGIN_ID}-block-codemirror-execute`,
+  autoStart: true,
+  requires: [IOutsourceProsemirror],
+  activate: (_app: JupyterFrontEnd, prosemirror: IOutsourceProsemirror): void => {
+
+    async function init() {
+      const {executeExtension} = await import('./blocks/execute');
+      return executeExtension;
+    }
+
+    prosemirror.addExtension('code_block', {
+      init: init
+    });
+  },
+};
+
+export default [extension, codeBlock];

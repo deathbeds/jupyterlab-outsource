@@ -17,4 +17,8 @@ fi
 set -ex
 jlpm --ignore-optional || jlpm || echo "well, let's try anyway"
 jlpm bootstrap
-jupyter labextension install $(cat labex.txt)
+jupyter labextension list || echo "ok"
+rm -rf ${CONDA_PREFIX}/share/jupyter/lab
+jlpm lab:link
+jupyter labextension list
+jupyter lab build --dev-build=False --minimize=True --debug

@@ -1,24 +1,41 @@
-import {Token} from '@phosphor/coreutils';
+import { Token } from '@lumino/coreutils';
+import { EditorProps } from 'prosemirror-view';
+import { Plugin } from 'prosemirror-state';
+import { Schema } from 'prosemirror-model';
+
+import { IOutsourceror } from '@deathbeds/jupyterlab-outsource/src';
+import { ProseMirrorSource } from './widget';
 
 export const PLUGIN_ID = '@deathbeds/jupyterlab-outsource:prosemirror';
 
-/*
-@import url("prosemirror-view/style/prosemirror.css");
-@import url("prosemirror-menu/style/menu.css");
-*/
-
-// import 'prosemirror-view/style/prosemirror.css';
-// import 'prosemirror-menu/style/menu.css';
-import '../style/index.css';
-
-/* tslint:disable */
-/**
- * The notebook source manager
- */
 export const IOutsourceProsemirror = new Token<IOutsourceProsemirror>(PLUGIN_ID);
-/* tslint:enable */
 
-export interface IOutsourceProsemirror {}
+export interface IOutsourceProsemirror extends IOutsourceror.IFactory {
+  addExtension(name: string, extension: IOutsourceProsemirror.IExtension): void;
+  getExtensions(): IOutsourceProsemirror.IExtend[];
+}
+
+export namespace IOutsourceProsemirror {
+  export interface IFactoryOptions extends IOutsourceror.IFactoryOptions {
+    factory: IOutsourceProsemirror;
+    schema: Schema;
+  }
+  export interface IExtension {
+    init(): Promise<IExtend>;
+  }
+  export interface IExtend {
+    (api: IAPI): IExtensionPoints;
+  }
+  export interface IAPI {
+    schema: Schema;
+    widget: ProseMirrorSource;
+  }
+  export interface IExtensionPoints {
+    nodes?: Partial<Schema['nodes']>;
+    nodeViews?: EditorProps['nodeViews'];
+    plugins?: Plugin[];
+  }
+}
 
 export const CSS = {
   OUTER_WRAPPER: `jp-Outsource-ProseMirror`,

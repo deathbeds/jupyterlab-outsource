@@ -1,46 +1,94 @@
-import {Widget} from '@phosphor/widgets';
-import {IObservableString} from '@jupyterlab/observables';
+import { Widget } from '@lumino/widgets';
+import { IObservableString } from '@jupyterlab/observables';
 
-import {IMarkdownCellModel} from '@jupyterlab/cells';
+import { CodeEditor } from '@jupyterlab/codeeditor';
 
-import {EditorState, Transaction} from 'prosemirror-state';
-import {EditorView} from 'prosemirror-view';
-import * as Markdown from 'prosemirror-markdown';
-import {IOutsourceFactoryOptions} from '@deathbeds/jupyterlab-outsource';
-import * as exampleSetup from 'prosemirror-example-setup';
+import { EditorState, Transaction, Plugin } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
+import { exampleSetup } from 'prosemirror-example-setup';
 
-import {CSS} from '.';
+import { CSS, IOutsourceProsemirror } from '.';
+
+import '../style/index.css';
+import 'prosemirror-example-setup/style/style.css';
+import 'prosemirror-view/style/prosemirror.css';
+
+import { SCHEMA, PARSE, SERIALIZE } from './schema';
+import { IOutsourceror } from '@deathbeds/jupyterlab-outsource/src';
+
+export const SOURCEROR: {
+  instance: IOutsourceror | null;
+} = {
+  instance: null,
+};
 
 export class ProseMirrorSource extends Widget {
-  private _model: IMarkdownCellModel;
+  private _model: CodeEditor.IModel;
   private _wrapper: HTMLDivElement;
   private _view: EditorView<any>;
   private _lastSource: string = '';
+  private _factory: IOutsourceProsemirror;
+  private _widget: Widget;
 
-  constructor(options: IOutsourceFactoryOptions) {
+  constructor(options: IOutsourceProsemirror.IFactoryOptions) {
     super();
     this.addClass(CSS.OUTER_WRAPPER);
     this.addClass('jp-RenderedHTMLCommon');
-    this._model = options.model as IMarkdownCellModel;
+    this._factory = options.factory;
+    this._model = options.model;
     this._model.value.changed.connect(this._contentChanged, this);
+    this._widget = options.widget;
 
     this.node.appendChild((this._wrapper = document.createElement('div')));
     this._wrapper.className = CSS.WRAPPER;
 
     let that = this;
-    let source = this._model.toJSON().source;
+    let source = this._model.value.text;
+
+    const { nodeViews, nodes, plugins } = this.create();
+
+    SCHEMA.nodes = {
+      ...SCHEMA.nodes,
+      ...nodes,
+    };
 
     this._view = new EditorView(this._wrapper, {
+      nodeViews,
       state: EditorState.create({
-        doc: (Markdown as any).defaultMarkdownParser.parse(
-          typeof source === 'string' ? source : source.join('')
-        ),
-        plugins: (exampleSetup as any).exampleSetup({schema: (Markdown as any).schema}),
+        doc: PARSE(source),
+        plugins: [...exampleSetup({ schema: SCHEMA }), ...(plugins || [])],
       }),
       dispatchTransaction(transaction: Transaction) {
         that._pmChanged(transaction);
       },
     });
+  }
+
+  execute(text: string) {
+    SOURCEROR.instance?.executeText({
+      widgetId: this._widget.id,
+      text: text,
+    });
+  }
+
+  create() {
+    let nodeViews = {};
+    let plugins = [] as Plugin<any, any>[];
+    let nodes = {};
+
+    for (const extension of this._factory.getExtensions()) {
+      const ep = extension({
+        schema: SCHEMA,
+        widget: this,
+      });
+      nodeViews = { ...nodeViews, ...ep.nodeViews };
+      if (plugins != null) {
+        plugins = [...plugins, ...(ep.plugins || [])] as any;
+      }
+      nodes = { ...nodes, ...ep.nodes };
+    }
+
+    return { nodeViews, nodes, plugins };
   }
 
   dispose() {
@@ -51,9 +99,7 @@ export class ProseMirrorSource extends Widget {
   private _pmChanged(transaction: Transaction) {
     const newState = this._view.state.apply(transaction);
     this._view.updateState(newState);
-    this._lastSource = (Markdown as any).defaultMarkdownSerializer.serialize(
-      this._view.state.doc
-    );
+    this._lastSource = SERIALIZE(this._view.state.doc);
     if (this._lastSource.trim() === this._model.value.text.trim()) {
       return;
     }
@@ -71,8 +117,9 @@ export class ProseMirrorSource extends Widget {
     this._lastSource = source;
     this._view.updateState(
       EditorState.create({
-        doc: (Markdown as any).defaultMarkdownParser.parse(source),
-        plugins: (exampleSetup as any).exampleSetup({schema: (Markdown as any).schema}),
+        doc: PARSE(source),
+        plugins: [...exampleSetup({ schema: SCHEMA })],
+        selection: this._view.state.selection
       })
     );
   }

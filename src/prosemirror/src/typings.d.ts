@@ -1,6 +1,14 @@
+
 declare module 'prosemirror-example-setup' {
-
-}
-declare module 'prosemirror-markdown' {
-
+  import { Plugin } from 'prosemirror-state';
+  import { Schema } from 'prosemirror-model';
+  export interface IOptions {
+    schema: Schema;
+    mapKeys?: any;
+    menuBar?: boolean;
+    floatingMenu?: boolean;
+    menuContent?: any;
+    history?: boolean;
+  }
+  export function exampleSetup(options: IOptions): Plugin[];
 }

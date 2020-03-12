@@ -1,0 +1,20 @@
+name: jupyterlab-outsource-dev
+
+commands:
+  lab:
+    unix: jupyter lab --no-browser --debug
+
+env_specs:
+  default:
+    inherit_from:
+      - jupyterlab-outsource-dev
+
+  jupyterlab-outsource-dev:
+    channels:
+      - conda-forge
+      - defaults
+
+    packages:
+      - jupyterlab >=2.0.1,<2.1.0a0
+      - nodejs >=12,<13.0.0a0
+      - python >=3.8,<3.9.0a0
